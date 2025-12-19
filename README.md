@@ -1,87 +1,71 @@
-# Welcome to React Router!
+# Vellum
 
-A modern, production-ready template for building full-stack React applications using React Router.
+Vellum is a modern, fast, and interactive whiteboard application built for the web. It leverages the power of React Router v7 and HTML5 Canvas to provide a seamless drawing experience.
 
-[![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/remix-run/react-router-templates/tree/main/default)
+## 🚀 Features
 
-## Features
+*   **Diverse Drawing Tools**: Sketch freely with the **Pencil**, create structured diagrams with **Rectangle** and **Circle** shapes, or add annotations with the **Text** tool.
+*   **Intuitive Editing**: Select, move, and manipulate objects on the canvas with the **Select** tool.
+*   **Customizable Properties**: Adjust stroke colors, widths, opacity, and font sizes via the Properties Panel.
+*   **Eraser Tool**: Easily remove unwanted elements.
+*   **State Management**: Built with Zustand for performant state handling.
+*   **Local Persistence**: Your work is automatically saved to your browser's local storage.
+*   **Modern UI**: Styled with Tailwind CSS v4 and Glassmorphism design principles.
 
-- 🚀 Server-side rendering
-- ⚡️ Hot Module Replacement (HMR)
-- 📦 Asset bundling and optimization
-- 🔄 Data loading and mutations
-- 🔒 TypeScript by default
-- 🎉 TailwindCSS for styling
-- 📖 [React Router docs](https://reactrouter.com/)
+## 🛠️ Tech Stack
 
-## Getting Started
+*   **Framework**: [React Router v7](https://reactrouter.com/)
+*   **Language**: [TypeScript](https://www.typescriptlang.org/)
+*   **Styling**: [Tailwind CSS v4](https://tailwindcss.com/)
+*   **State Management**: [Zustand](https://github.com/pmndrs/zustand)
+*   **Icons**: [Lucide React](https://lucide.dev/)
+*   **Build Tool**: [Vite](https://vitejs.dev/)
+
+## 📦 Getting Started
+
+### Prerequisites
+
+*   Node.js (v20 or later recommended)
+*   npm (or yarn/pnpm/bun)
 
 ### Installation
 
-Install the dependencies:
+1.  **Clone the repository:**
+    ```bash
+    git clone https://github.com/yourusername/vellum.git
+    cd vellum
+    ```
 
-```bash
-npm install
-```
+2.  **Install dependencies:**
+    ```bash
+    npm install
+    ```
 
-### Development
+3.  **Run the development server:**
+    ```bash
+    npm run dev
+    ```
+    The application will be available at `http://localhost:5173` (or the port shown in your terminal).
 
-Start the development server with HMR:
+## 🔧 Building for Production
 
-```bash
-npm run dev
-```
-
-Your application will be available at `http://localhost:5173`.
-
-## Building for Production
-
-Create a production build:
+To build the application for production deployment:
 
 ```bash
 npm run build
 ```
 
-## Deployment
-
-### Docker Deployment
-
-To build and run using Docker:
+To preview the production build locally:
 
 ```bash
-docker build -t my-app .
-
-# Run the container
-docker run -p 3000:3000 my-app
+npm start
 ```
 
-The containerized application can be deployed to any platform that supports Docker, including:
+## 📂 Project Structure
 
-- AWS ECS
-- Google Cloud Run
-- Azure Container Apps
-- Digital Ocean App Platform
-- Fly.io
-- Railway
-
-### DIY Deployment
-
-If you're familiar with deploying Node applications, the built-in app server is production-ready.
-
-Make sure to deploy the output of `npm run build`
-
-```
-├── package.json
-├── package-lock.json (or pnpm-lock.yaml, or bun.lockb)
-├── build/
-│   ├── client/    # Static assets
-│   └── server/    # Server-side code
-```
-
-## Styling
-
-This template comes with [Tailwind CSS](https://tailwindcss.com/) already configured for a simple default starting experience. You can use whatever CSS framework you prefer.
-
----
-
-Built with ❤️ using React Router.
+*   `app/components`: UI components organized by feature (Canvas, Toolbar, Properties, etc.).
+*   `app/hooks`: Custom React hooks for canvas logic (`useDrawing`, `useSelection`, etc.).
+*   `app/lib`: Core logic for rendering, hit detection, and object manipulation.
+*   `app/store`: Global state management using Zustand.
+*   `app/types`: TypeScript definitions for canvas objects and tools.
+*   `app/routes`: Application routes (Home, Whiteboard).
