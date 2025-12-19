@@ -1,5 +1,5 @@
-import { useEffect } from 'react';
-import { useCanvasStore } from '~/store/canvas-store';
+import { useEffect } from "react";
+import { useCanvasStore } from "~/store/canvas-store";
 
 export function useKeyboard() {
   const selectedObjectId = useCanvasStore((state) => state.selectedObjectId);
@@ -7,48 +7,45 @@ export function useKeyboard() {
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (
-        e.target instanceof HTMLInputElement ||
-        e.target instanceof HTMLTextAreaElement
-      ) {
+      if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) {
         return;
       }
 
       const key = e.key.toLowerCase();
 
       switch (key) {
-        case 'v':
-          setCurrentTool('select');
+        case "v":
+          setCurrentTool("select");
           break;
-        case 'p':
-          setCurrentTool('pencil');
+        case "p":
+          setCurrentTool("pencil");
           break;
-        case 'r':
-          setCurrentTool('rectangle');
+        case "r":
+          setCurrentTool("rectangle");
           break;
-        case 'c':
-          setCurrentTool('circle');
+        case "c":
+          setCurrentTool("circle");
           break;
-        case 't':
-          setCurrentTool('text');
+        case "t":
+          setCurrentTool("text");
           break;
-        case 'e':
-          setCurrentTool('eraser');
+        case "e":
+          setCurrentTool("eraser");
           break;
-        case 'delete':
-        case 'backspace':
+        case "delete":
+        case "backspace":
           if (selectedObjectId) {
             e.preventDefault();
             deleteObject(selectedObjectId);
           }
           break;
-        case 'escape':
+        case "escape":
           selectObject(null);
           break;
       }
     };
 
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
   }, [selectedObjectId, setCurrentTool, deleteObject, selectObject]);
 }

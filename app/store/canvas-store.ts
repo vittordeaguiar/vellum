@@ -1,9 +1,5 @@
-import { create } from 'zustand';
-import type {
-  DrawObject,
-  ToolType,
-  DrawingProperties,
-} from '~/types/canvas.types';
+import { create } from "zustand";
+import type { DrawObject, ToolType, DrawingProperties } from "~/types/canvas.types";
 
 interface CanvasStore {
   objects: DrawObject[];
@@ -28,11 +24,12 @@ interface CanvasStore {
 export const useCanvasStore = create<CanvasStore>((set) => ({
   objects: [],
   selectedObjectId: null,
-  currentTool: 'select',
+  currentTool: "select",
   currentProperties: {
-    color: '#1E293B',
+    color: "#1E293B",
     strokeWidth: 3,
     opacity: 100,
+    fontSize: 16,
   },
   isDrawing: false,
   tempObject: null,

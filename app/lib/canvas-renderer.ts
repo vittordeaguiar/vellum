@@ -4,7 +4,7 @@ import type {
   RectangleObject,
   CircleObject,
   TextObject,
-} from '~/types/canvas.types';
+} from "~/types/canvas.types";
 
 export class CanvasRenderer {
   private canvas: HTMLCanvasElement;
@@ -12,9 +12,9 @@ export class CanvasRenderer {
 
   constructor(canvas: HTMLCanvasElement) {
     this.canvas = canvas;
-    const context = canvas.getContext('2d');
+    const context = canvas.getContext("2d");
     if (!context) {
-      throw new Error('Could not get 2D context');
+      throw new Error("Could not get 2D context");
     }
     this.ctx = context;
     this.setupCanvas();
@@ -32,11 +32,7 @@ export class CanvasRenderer {
     this.canvas.style.height = `${rect.height}px`;
   }
 
-  render(
-    objects: DrawObject[],
-    tempObject: DrawObject | null,
-    selectedId: string | null
-  ) {
+  render(objects: DrawObject[], tempObject: DrawObject | null, selectedId: string | null) {
     const rect = this.canvas.getBoundingClientRect();
     this.ctx.clearRect(0, 0, rect.width, rect.height);
 
@@ -56,20 +52,20 @@ export class CanvasRenderer {
     this.ctx.fillStyle = color;
     this.ctx.lineWidth = strokeWidth;
     this.ctx.globalAlpha = opacity / 100;
-    this.ctx.lineCap = 'round';
-    this.ctx.lineJoin = 'round';
+    this.ctx.lineCap = "round";
+    this.ctx.lineJoin = "round";
 
     switch (obj.type) {
-      case 'line':
+      case "line":
         this.drawLine(obj);
         break;
-      case 'rectangle':
+      case "rectangle":
         this.drawRectangle(obj);
         break;
-      case 'circle':
+      case "circle":
         this.drawCircle(obj);
         break;
-      case 'text':
+      case "text":
         this.drawText(obj);
         break;
     }
@@ -116,7 +112,7 @@ export class CanvasRenderer {
     const originalAlpha = this.ctx.globalAlpha;
     this.ctx.globalAlpha = 1;
 
-    this.ctx.strokeStyle = '#6366F1';
+    this.ctx.strokeStyle = "#6366F1";
     this.ctx.lineWidth = 2;
     this.ctx.setLineDash([5, 5]);
 
@@ -134,7 +130,7 @@ export class CanvasRenderer {
     height: number;
   } {
     switch (obj.type) {
-      case 'line': {
+      case "line": {
         const xs = obj.points.map((p) => p.x);
         const ys = obj.points.map((p) => p.y);
         const minX = Math.min(...xs);
@@ -148,7 +144,7 @@ export class CanvasRenderer {
           height: maxY - minY + 10,
         };
       }
-      case 'rectangle': {
+      case "rectangle": {
         const minX = Math.min(obj.start.x, obj.end.x);
         const maxX = Math.max(obj.start.x, obj.end.x);
         const minY = Math.min(obj.start.y, obj.end.y);
@@ -160,14 +156,14 @@ export class CanvasRenderer {
           height: maxY - minY + 10,
         };
       }
-      case 'circle':
+      case "circle":
         return {
           x: obj.center.x - obj.radius - 5,
           y: obj.center.y - obj.radius - 5,
           width: obj.radius * 2 + 10,
           height: obj.radius * 2 + 10,
         };
-      case 'text': {
+      case "text": {
         const width = obj.text.length * obj.fontSize * 0.6;
         const height = obj.fontSize;
         return {
@@ -185,6 +181,6 @@ export class CanvasRenderer {
   }
 
   destroy() {
-    // Cleanup if needed
+    // TODO: Cleanup if needed
   }
 }

@@ -5,17 +5,17 @@ import type {
   CircleObject,
   TextObject,
   Point,
-} from '~/types/canvas.types';
+} from "~/types/canvas.types";
 
 export function isPointInObject(point: Point, object: DrawObject): boolean {
   switch (object.type) {
-    case 'line':
+    case "line":
       return isPointNearLine(point, object);
-    case 'rectangle':
+    case "rectangle":
       return isPointInRectangle(point, object);
-    case 'circle':
+    case "circle":
       return isPointInCircle(point, object);
-    case 'text':
+    case "text":
       return isPointInText(point, object);
     default:
       return false;
@@ -71,9 +71,7 @@ function isPointInRectangle(point: Point, rect: RectangleObject): boolean {
 }
 
 function isPointInCircle(point: Point, circle: CircleObject): boolean {
-  const distance = Math.sqrt(
-    (point.x - circle.center.x) ** 2 + (point.y - circle.center.y) ** 2
-  );
+  const distance = Math.sqrt((point.x - circle.center.x) ** 2 + (point.y - circle.center.y) ** 2);
 
   const threshold = circle.properties.strokeWidth + 5;
 
@@ -92,10 +90,7 @@ function isPointInText(point: Point, text: TextObject): boolean {
   );
 }
 
-export function findObjectAtPoint(
-  point: Point,
-  objects: DrawObject[]
-): DrawObject | null {
+export function findObjectAtPoint(point: Point, objects: DrawObject[]): DrawObject | null {
   for (let i = objects.length - 1; i >= 0; i--) {
     if (isPointInObject(point, objects[i])) {
       return objects[i];

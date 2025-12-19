@@ -6,19 +6,16 @@ import type {
   TextObject,
   Point,
   DrawingProperties,
-} from '~/types/canvas.types';
+} from "~/types/canvas.types";
 
 function generateId(): string {
   return `${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
 }
 
-export function createLineObject(
-  points: Point[],
-  properties: DrawingProperties
-): LineObject {
+export function createLineObject(points: Point[], properties: DrawingProperties): LineObject {
   return {
     id: generateId(),
-    type: 'line',
+    type: "line",
     points,
     properties,
     createdAt: Date.now(),
@@ -32,7 +29,7 @@ export function createRectangleObject(
 ): RectangleObject {
   return {
     id: generateId(),
-    type: 'rectangle',
+    type: "rectangle",
     start,
     end,
     properties,
@@ -47,7 +44,7 @@ export function createCircleObject(
 ): CircleObject {
   return {
     id: generateId(),
-    type: 'circle',
+    type: "circle",
     center,
     radius,
     properties,
@@ -63,7 +60,7 @@ export function createTextObject(
 ): TextObject {
   return {
     id: generateId(),
-    type: 'text',
+    type: "text",
     position,
     text,
     fontSize,
@@ -74,7 +71,7 @@ export function createTextObject(
 
 export function moveObject(obj: DrawObject, dx: number, dy: number): DrawObject {
   switch (obj.type) {
-    case 'line':
+    case "line":
       return {
         ...obj,
         points: obj.points.map((p) => ({
@@ -82,18 +79,18 @@ export function moveObject(obj: DrawObject, dx: number, dy: number): DrawObject 
           y: p.y + dy,
         })),
       };
-    case 'rectangle':
+    case "rectangle":
       return {
         ...obj,
         start: { x: obj.start.x + dx, y: obj.start.y + dy },
         end: { x: obj.end.x + dx, y: obj.end.y + dy },
       };
-    case 'circle':
+    case "circle":
       return {
         ...obj,
         center: { x: obj.center.x + dx, y: obj.center.y + dy },
       };
-    case 'text':
+    case "text":
       return {
         ...obj,
         position: { x: obj.position.x + dx, y: obj.position.y + dy },

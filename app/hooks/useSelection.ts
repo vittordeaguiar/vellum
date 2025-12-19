@@ -1,8 +1,8 @@
-import { useCallback, useEffect, useRef, type RefObject } from 'react';
-import { useCanvasStore } from '~/store/canvas-store';
-import { findObjectAtPoint } from '~/lib/hit-detection';
-import { moveObject } from '~/lib/object-factory';
-import type { Point } from '~/types/canvas.types';
+import { useCallback, useEffect, useRef, type RefObject } from "react";
+import { useCanvasStore } from "~/store/canvas-store";
+import { findObjectAtPoint } from "~/lib/hit-detection";
+import { moveObject } from "~/lib/object-factory";
+import type { Point } from "~/types/canvas.types";
 
 export function useSelection(canvasRef: RefObject<HTMLCanvasElement>) {
   const currentTool = useCanvasStore((state) => state.currentTool);
@@ -35,7 +35,7 @@ export function useSelection(canvasRef: RefObject<HTMLCanvasElement>) {
     (e: MouseEvent) => {
       const pos = getMousePos(e);
 
-      if (currentTool === 'select') {
+      if (currentTool === "select") {
         const clickedObject = findObjectAtPoint(pos, objects);
 
         if (clickedObject) {
@@ -48,7 +48,7 @@ export function useSelection(canvasRef: RefObject<HTMLCanvasElement>) {
         } else {
           selectObject(null);
         }
-      } else if (currentTool === 'eraser') {
+      } else if (currentTool === "eraser") {
         const clickedObject = findObjectAtPoint(pos, objects);
         if (clickedObject) {
           deleteObject(clickedObject.id);
@@ -60,11 +60,7 @@ export function useSelection(canvasRef: RefObject<HTMLCanvasElement>) {
 
   const handleMouseMove = useCallback(
     (e: MouseEvent) => {
-      if (
-        !dragStateRef.current.isDragging ||
-        !selectedObjectId ||
-        currentTool !== 'select'
-      ) {
+      if (!dragStateRef.current.isDragging || !selectedObjectId || currentTool !== "select") {
         return;
       }
 
@@ -75,11 +71,7 @@ export function useSelection(canvasRef: RefObject<HTMLCanvasElement>) {
       const selectedObject = objects.find((obj) => obj.id === selectedObjectId);
       if (!selectedObject) return;
 
-      const movedObject = moveObject(
-        dragStateRef.current.initialObjectState,
-        dx,
-        dy
-      );
+      const movedObject = moveObject(dragStateRef.current.initialObjectState, dx, dy);
       updateObject(selectedObjectId, movedObject);
     },
     [currentTool, selectedObjectId, objects, getMousePos, updateObject]
@@ -87,9 +79,7 @@ export function useSelection(canvasRef: RefObject<HTMLCanvasElement>) {
 
   const handleMouseUp = useCallback(() => {
     if (dragStateRef.current.isDragging && selectedObjectId) {
-      dragStateRef.current.initialObjectState = objects.find(
-        (obj) => obj.id === selectedObjectId
-      );
+      dragStateRef.current.initialObjectState = objects.find((obj) => obj.id === selectedObjectId);
     }
     dragStateRef.current.isDragging = false;
   }, [selectedObjectId, objects]);
@@ -98,14 +88,14 @@ export function useSelection(canvasRef: RefObject<HTMLCanvasElement>) {
     const canvas = canvasRef.current;
     if (!canvas) return;
 
-    canvas.addEventListener('mousedown', handleMouseDown);
-    canvas.addEventListener('mousemove', handleMouseMove);
-    canvas.addEventListener('mouseup', handleMouseUp);
+    canvas.addEventListener("mousedown", handleMouseDown);
+    canvas.addEventListener("mousemove", handleMouseMove);
+    canvas.addEventListener("mouseup", handleMouseUp);
 
     return () => {
-      canvas.removeEventListener('mousedown', handleMouseDown);
-      canvas.removeEventListener('mousemove', handleMouseMove);
-      canvas.removeEventListener('mouseup', handleMouseUp);
+      canvas.removeEventListener("mousedown", handleMouseDown);
+      canvas.removeEventListener("mousemove", handleMouseMove);
+      canvas.removeEventListener("mouseup", handleMouseUp);
     };
   }, [handleMouseDown, handleMouseMove, handleMouseUp, canvasRef]);
 }

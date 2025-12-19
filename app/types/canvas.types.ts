@@ -1,10 +1,4 @@
-export type ToolType =
-  | 'select'
-  | 'pencil'
-  | 'rectangle'
-  | 'circle'
-  | 'text'
-  | 'eraser';
+export type ToolType = "select" | "pencil" | "rectangle" | "circle" | "text" | "eraser";
 
 export interface Point {
   x: number;
@@ -15,13 +9,10 @@ export interface DrawingProperties {
   color: string;
   strokeWidth: number;
   opacity: number;
+  fontSize: number;
 }
 
-export type DrawObjectType =
-  | 'line'
-  | 'rectangle'
-  | 'circle'
-  | 'text';
+export type DrawObjectType = "line" | "rectangle" | "circle" | "text";
 
 export interface BaseDrawObject {
   id: string;
@@ -31,34 +22,30 @@ export interface BaseDrawObject {
 }
 
 export interface LineObject extends BaseDrawObject {
-  type: 'line';
+  type: "line";
   points: Point[];
 }
 
 export interface RectangleObject extends BaseDrawObject {
-  type: 'rectangle';
+  type: "rectangle";
   start: Point;
   end: Point;
 }
 
 export interface CircleObject extends BaseDrawObject {
-  type: 'circle';
+  type: "circle";
   center: Point;
   radius: number;
 }
 
 export interface TextObject extends BaseDrawObject {
-  type: 'text';
+  type: "text";
   position: Point;
   text: string;
   fontSize: number;
 }
 
-export type DrawObject =
-  | LineObject
-  | RectangleObject
-  | CircleObject
-  | TextObject;
+export type DrawObject = LineObject | RectangleObject | CircleObject | TextObject;
 
 export interface CanvasState {
   objects: DrawObject[];

@@ -1,6 +1,6 @@
-import { useEffect, useRef } from 'react';
-import { CanvasRenderer } from '~/lib/canvas-renderer';
-import { useCanvasStore } from '~/store/canvas-store';
+import { useEffect, useRef } from "react";
+import { CanvasRenderer } from "~/lib/canvas-renderer";
+import { useCanvasStore } from "~/store/canvas-store";
 
 export function useCanvas() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -20,10 +20,10 @@ export function useCanvas() {
       rendererRef.current?.render(objects, tempObject, selectedObjectId);
     };
 
-    window.addEventListener('resize', handleResize);
+    window.addEventListener("resize", handleResize);
 
     return () => {
-      window.removeEventListener('resize', handleResize);
+      window.removeEventListener("resize", handleResize);
       rendererRef.current?.destroy();
     };
   }, []);
