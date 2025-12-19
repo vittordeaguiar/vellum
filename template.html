@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vellum | Modern Whiteboard</title>
+    
+    <!-- Fonte Inter para visual SaaS limpo -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    
+    <!-- Biblioteca de Ícones Lucide -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <style>
+        /* --- CSS VARIABLES & DESIGN SYSTEM --- */
+        :root {
+            /* Paleta de Cores */
+            --color-bg: #F8FAFC;          /* Off-white muito suave (Slate 50) */
+            --color-surface: rgba(255, 255, 255, 0.75); /* Vidro */
+            --color-border: rgba(226, 232, 240, 0.6);
+            
+            --color-text-main: #1E293B;   /* Slate 800 */
+            --color-text-muted: #64748B;  /* Slate 500 */
+            
+            --color-primary: #6366F1;     /* Indigo vibrante */
+            --color-primary-hover: #4F46E5;
+            --color-danger: #EF4444;
+            
+            /* Sombras e Efeitos */
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --shadow-float: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            --blur-strength: 12px;
+            --radius-md: 12px;
+            --radius-full: 9999px;
+            
+            /* Layout */
+            --header-height: 64px;
+            --toolbar-width: 56px;
+            --z-canvas: 0;
+            --z-ui: 100;
+        }
+
+        /* --- RESET & BASE --- */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--color-bg);
+            color: var(--color-text-main);
+            overflow: hidden; /* Impede scroll, canvas é infinito ou pan-able */
+            height: 100vh;
+            width: 100vw;
+        }
+
+        /* --- CANVAS CONTAINER --- */
+        /* Ocupa toda a tela, fica atrás da UI */
+        #canvas-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: var(--z-canvas);
+            /* Padrão de Grid simulado via CSS */
+            background-image: radial-gradient(#CBD5E1 1.5px, transparent 1.5px);
+            background-size: 24px 24px;
+            cursor: crosshair;
+        }
+
+        /* O elemento canvas real será injetado aqui pelo JS */
+        canvas {
+            display: block;
+        }
+
+        /* --- UI COMPONENTS COMUM --- */
+        .glass-panel {
+            background: var(--color-surface);
+            backdrop-filter: blur(var(--blur-strength));
+            -webkit-backdrop-filter: blur(var(--blur-strength));
+            border: 1px solid var(--color-border);
+            box-shadow: var(--shadow-float);
+            z-index: var(--z-ui);
+        }
+
+        .icon-btn {
+            border: none;
+            background: transparent;
+            color: var(--color-text-muted);
+            padding: 10px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .icon-btn:hover {
+            background-color: rgba(99, 102, 241, 0.1);
+            color: var(--color-primary);
+        }
+
+        .icon-btn.active {
+            background-color: var(--color-primary);
+            color: white;
+            box-shadow: 0 4px 6px rgba(99, 102, 241, 0.25);
+        }
+
+        /* --- HEADER --- */
+        .top-bar {
+            position: absolute;
+            top: 16px;
+            left: 16px;
+            right: 16px;
+            height: var(--header-height);
+            border-radius: var(--radius-md);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 20px;
+        }
+
+        .brand-area {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo-mark {
+            width: 32px;
+            height: 32px;
+            background: var(--color-primary);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+        }
+
+        .project-info h1 {
+            font-size: 14px;
+            font-weight: 600;
+        }
+        
+        .project-info span {
+            font-size: 12px;
+            color: var(--color-text-muted);
+        }
+
+        .actions-area {
+            display: flex;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: var(--color-text-main);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        
+        .btn-primary:hover {
+            background: black;
+        }
+
+        .btn-ghost {
+            background: transparent;
+            color: var(--color-text-muted);
+            border: 1px solid transparent;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+        }
+
+        .btn-ghost:hover {
+            background: rgba(0,0,0,0.05);
+            color: var(--color-danger);
+        }
+
+        /* --- TOOLBAR (Lateral Esquerda) --- */
+        .toolbar {
+            position: absolute;
+            left: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: var(--toolbar-width);
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            padding: 12px 8px;
+            border-radius: var(--radius-md);
+        }
+
+        .separator {
+            height: 1px;
+            background: var(--color-border);
+            margin: 4px 0;
+            width: 100%;
+        }
+
+        /* Color Picker Customizado */
+        .color-wrapper {
+            position: relative;
+            width: 32px;
+            height: 32px;
+            margin: 0 auto;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 2px solid white;
+            box-shadow: 0 0 0 1px var(--color-border);
+            cursor: pointer;
+        }
+
+        #tool-color-picker {
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            cursor: pointer;
+            border: none;
+            padding: 0;
+        }
+
+        /* --- PROPERTIES PANEL (Inferior Central/Esquerdo) --- */
+        .properties-panel {
+            position: absolute;
+            bottom: 24px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            align-items: center;
+            gap: 24px;
+            padding: 12px 24px;
+            border-radius: var(--radius-full);
+        }
+
+        .prop-group {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .prop-label {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--color-text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* Custom Range Slider */
+        input[type="range"] {
+            -webkit-appearance: none;
+            width: 100px;
+            height: 4px;
+            background: #E2E8F0;
+            border-radius: 2px;
+            outline: none;
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: var(--color-primary);
+            cursor: pointer;
+            border: 2px solid white;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            transition: transform 0.1s;
+        }
+        
+        input[type="range"]::-webkit-slider-thumb:hover {
+            transform: scale(1.1);
+        }
+
+        /* --- RESPONSIVIDADE --- */
+        @media (max-width: 768px) {
+            /* No mobile, header fica menor */
+            .top-bar {
+                left: 10px; right: 10px; top: 10px;
+                padding: 0 12px;
+            }
+            
+            .project-info span { display: none; } /* Esconde texto extra */
+
+            /* Toolbar vai para baixo horizontalmente */
+            .toolbar {
+                top: auto;
+                bottom: 24px;
+                left: 50%;
+                transform: translateX(-50%);
+                width: auto;
+                flex-direction: row;
+                padding: 8px 16px;
+                border-radius: var(--radius-full);
+            }
+
+            /* Properties panel sobe um pouco ou vira um modal (simplificado aqui) */
+            .properties-panel {
+                bottom: 90px;
+                width: 90%;
+                justify-content: center;
+                border-radius: var(--radius-md);
+            }
+            
+            .separator {
+                width: 1px;
+                height: 24px;
+                margin: 0 4px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="app-container">
+        
+        <!-- 1. HEADER / STATUS BAR -->
+        <header class="top-bar glass-panel">
+            <div class="brand-area">
+                <div class="logo-mark">V</div>
+                <div class="project-info">
+                    <h1 id="project-name">Projeto Vellum Sem Título</h1>
+                    <span>Editado agora mesmo</span>
+                </div>
+            </div>
+            
+            <div class="actions-area">
+                <button id="btn-clear" class="btn-ghost">Limpar</button>
+                <button id="btn-export" class="btn-primary">
+                    <i data-lucide="download" style="width: 16px; height: 16px; display: inline-block; vertical-align: middle; margin-right: 4px;"></i>
+                    Exportar
+                </button>
+            </div>
+        </header>
+
+        <!-- 2. CANVAS LAYER -->
+        <div id="canvas-container">
+            <!-- Elemento Canvas será inserido aqui dinamicamente ou estaticamente se preferir -->
+            <canvas id="main-canvas"></canvas>
+        </div>
+
+        <!-- 3. FLOATING TOOLBAR -->
+        <aside class="toolbar glass-panel">
+            <!-- Ferramenta: Seleção -->
+            <button id="tool-select" class="icon-btn active" title="Selecionar (V)">
+                <i data-lucide="mouse-pointer-2"></i>
+            </button>
+            
+            <div class="separator"></div>
+            
+            <!-- Ferramenta: Lápis -->
+            <button id="tool-pencil" class="icon-btn" title="Lápis (P)">
+                <i data-lucide="pencil"></i>
+            </button>
+            
+            <!-- Ferramenta: Retângulo -->
+            <button id="tool-rect" class="icon-btn" title="Retângulo (R)">
+                <i data-lucide="square"></i>
+            </button>
+            
+            <!-- Ferramenta: Círculo -->
+            <button id="tool-circle" class="icon-btn" title="Círculo (C)">
+                <i data-lucide="circle"></i>
+            </button>
+            
+            <!-- Ferramenta: Texto -->
+            <button id="tool-text" class="icon-btn" title="Texto (T)">
+                <i data-lucide="type"></i>
+            </button>
+
+            <div class="separator"></div>
+
+            <!-- Ferramenta: Borracha -->
+            <button id="tool-eraser" class="icon-btn" title="Borracha (E)">
+                <i data-lucide="eraser"></i>
+            </button>
+
+            <!-- Seletor de Cores -->
+            <div class="color-wrapper" title="Cor do Traço">
+                <input type="color" id="tool-color-picker" value="#1E293B">
+            </div>
+        </aside>
+
+        <!-- 4. PROPERTIES PANEL -->
+        <aside class="properties-panel glass-panel">
+            <div class="prop-group">
+                <i data-lucide="minus" size="14" color="#64748B"></i>
+                <div class="prop-control">
+                    <input type="range" id="prop-stroke-width" min="1" max="50" value="3">
+                </div>
+                <i data-lucide="circle" size="14" color="#64748B" style="fill: #64748B"></i>
+            </div>
+            
+            <div style="width: 1px; height: 20px; background: var(--color-border);"></div>
+            
+            <div class="prop-group">
+                <span class="prop-label">Opacidade</span>
+                <input type="range" id="prop-opacity" min="10" max="100" value="100">
+            </div>
+        </aside>
+
+    </div>
+
+    <!-- Script apenas para renderizar os ícones (Display Logic) -->
+    <script>
+        lucide.createIcons();
+    </script>
+</body>
+</html>
