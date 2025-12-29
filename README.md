@@ -2,7 +2,7 @@
 
 Vellum is a modern, fast, and interactive whiteboard application built for the web. It leverages the power of React Router v7 and HTML5 Canvas to provide a seamless drawing experience.
 
-## 🚀 Features
+## Features
 
 *   **Diverse Drawing Tools**: Sketch freely with the **Pencil**, create structured diagrams with **Rectangle** and **Circle** shapes, or add annotations with the **Text** tool.
 *   **Intuitive Editing**: Select, move, and manipulate objects on the canvas with the **Select** tool.
@@ -12,7 +12,7 @@ Vellum is a modern, fast, and interactive whiteboard application built for the w
 *   **Local Persistence**: Your work is automatically saved to your browser's local storage.
 *   **Modern UI**: Styled with Tailwind CSS v4 and Glassmorphism design principles.
 
-## 🛠️ Tech Stack
+## Tech Stack
 
 *   **Framework**: [React Router v7](https://reactrouter.com/)
 *   **Language**: [TypeScript](https://www.typescriptlang.org/)
@@ -21,7 +21,7 @@ Vellum is a modern, fast, and interactive whiteboard application built for the w
 *   **Icons**: [Lucide React](https://lucide.dev/)
 *   **Build Tool**: [Vite](https://vitejs.dev/)
 
-## 📦 Getting Started
+## Getting Started
 
 ### Prerequisites
 
@@ -61,7 +61,7 @@ To preview the production build locally:
 npm start
 ```
 
-## 📂 Project Structure
+## Project Structure
 
 *   `app/components`: UI components organized by feature (Canvas, Toolbar, Properties, etc.).
 *   `app/hooks`: Custom React hooks for canvas logic (`useDrawing`, `useSelection`, etc.).
